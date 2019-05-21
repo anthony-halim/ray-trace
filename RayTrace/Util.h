@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
-#include <glm/vec3.hpp>
 
 #include "Ray.h"
 
@@ -16,8 +15,8 @@ namespace Util {
 
 
 	glm::vec3 BlueSky_Color(const Ray& r) {
-		float t = 0.5 * (r.GetDir().y + 1.0f);
-		return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) +
+		float t = 0.5f * (r.GetDir().y + 1.0f);
+		return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5, 0.7, 1.0);
 	}
 };
 
