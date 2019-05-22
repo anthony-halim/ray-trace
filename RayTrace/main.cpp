@@ -1,13 +1,17 @@
 #include "Util.h"
 #include "PolygonList.h"
 #include "Sphere.h"
+#include "Camera.h"
+
 
 #define IMAGE_WIDTH 200
 #define IMAGE_HEIGHT 100
-#define T_MIN 1.0e-4f
-#define T_MAX 1.0e4f
 
 #define FILENAME "output.ppm"
+
+#define T_MIN 1.0e-4f
+#define T_MAX 1.0e4f
+#define ANTI_ALIASING_SAMPLE_NUM 50
 
 // Forward Declaration
 static void SimulateAndWritePPM();
@@ -34,6 +38,7 @@ static void SimulateAndWritePPM() {
 	
 	int nx = IMAGE_WIDTH;
 	int ny = IMAGE_HEIGHT;
+	int ns = ANTI_ALIASING_SAMPLE_NUM;
 
 	if (!Util::IsFormatPPM(FILENAME)) {
 		std::cout << "ERROR: " << FILENAME << " is in wrong format. Acceptable file format: <filename>.ppm" << std::endl;
@@ -50,10 +55,7 @@ static void SimulateAndWritePPM() {
 		myfile << "P3\n" << nx << " " << ny << std::endl;
 		myfile << "255" << std::endl;
 
-		glm::vec3 lowerLeftCorner(-2.0f, -1.0f, -1.0f);
-		glm::vec3 horizontal(4.0f, 0.0f, 0.0f);
-		glm::vec3 vertical(0.0f, 2.0f, 0.0f);
-		glm::vec3 origin(0.0f, 0.0f, 0.0f);
+		Camera mainCamera;
 
 		// Scene Initialisation
 		Polygon* list[2];
@@ -64,13 +66,17 @@ static void SimulateAndWritePPM() {
 
 		for (int j = ny - 1; j >= 0; j--) {
 			for (int i = 0; i < nx; i++) {
-				float u = float(i) / float(nx);
-				float v = float(j) / float(ny);
+				glm::vec3 colour(0.0f, 0.0f, 0.0f);
 
-				Ray r(origin, lowerLeftCorner + u * horizontal + v * vertical);
-
-				glm::vec3 p = r.PointAtParameter(2.0f);
-				glm::vec3 colour = GetColour(r, world);
+				// Anti aliasing by shooting multiple ray per pixel and averaging the result
+				for (int s = 0; s < ns; s++) {
+					float u = float(i + ((float)rand() / RAND_MAX)) / float(nx);
+					float v = float(j + ((float)rand() / RAND_MAX)) / float(ny);
+					Ray r = mainCamera.GetRay(u, v);
+					glm::vec3 p = r.PointAtParameter(2.0f);
+					colour += GetColour(r, world);
+				}
+				colour /= float(ns);
 
 				int ir = int(255.99 * colour.r);
 				int ig = int(255.99 * colour.g);
