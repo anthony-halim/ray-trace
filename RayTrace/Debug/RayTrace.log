@@ -2,5 +2,4 @@
 C:\Users\t_halia\source\repos\RayTrace\RayTrace\Util.cpp(5): warning C4129: '.': unrecognized character escape sequence
   main.cpp
   Generating Code...
-Util.obj : error LNK2005: "struct glm::vec<3,float,0> __cdecl Util::BlueSky_Color(class Ray const &)" (?BlueSky_Color@Util@@YA?AU?$vec@$02M$0A@@glm@@ABVRay@@@Z) already defined in main.obj
-C:\Users\t_halia\source\repos\RayTrace\Debug\RayTrace.exe : fatal error LNK1169: one or more multiply defined symbols found
+  RayTrace.vcxproj -> C:\Users\t_halia\source\repos\RayTrace\Debug\RayTrace.exe
