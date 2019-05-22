@@ -7,12 +7,12 @@ class PolygonList : public Polygon {
 public:
 
 	Polygon** plygonList;
-	unsigned int listSize;
+	int listSize;
 
 	PolygonList() { plygonList = nullptr; listSize = 0; }
 	PolygonList(Polygon** l, int n) { plygonList = l; listSize = n; }
 
-	virtual bool IsHit(const Ray& r, float t_min, float t_max, SHitRecord record) const {
+	virtual bool IsHit(const Ray& r, float t_min, float t_max, SHitRecord& record) const {
 		
 		SHitRecord tempRec;
 		bool hitAnything = false;

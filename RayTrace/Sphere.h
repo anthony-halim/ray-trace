@@ -6,22 +6,22 @@ class Sphere : public Polygon {
 
 private:
 
-	glm::vec3 origin;
+	glm::vec3 centre;
 	float radius;
 
 public:
 	Sphere()
-		: origin(glm::vec3(0.0f, 0.0f, 0.0f)), radius(0.0f) {}
+		: centre(glm::vec3(0.0f, 0.0f, 0.0f)), radius(0.0f) {}
 
-	Sphere(const glm::vec3& ori, float r)
-		: origin(ori), radius(r) {}
+	Sphere(const glm::vec3& cent, float r)
+		: centre(cent), radius(r) {}
 
 	bool IsHit(const Ray& r, float t_min, float t_max, SHitRecord& record) const override {
 
-		glm::vec3 oc = r.GetOrigin() - origin;
-		float a = glm::dot(r.GetDir(), r.GetDir());
+		glm::vec3 oc = r.GetOrigin() - centre;
+		float a = 1.0f;
 		float b = 2.0f * glm::dot(oc, r.GetDir());
-		float c = glm::dot(oc, oc) - radius * radius;
+		float c = 1 - radius * radius;
 		float discr = b * b - 4 * a * c;
 
 		if (discr > 0) {
@@ -30,7 +30,7 @@ public:
 			if (temp < t_max && temp > t_min) {
 				record.t = temp;
 				record.p = r.PointAtParameter(temp);
-				record.normal = (record.p - origin) / radius;
+				record.normal = (record.p - centre) / radius;
 				return true;
 			}
 
@@ -39,7 +39,7 @@ public:
 			if (temp < t_max && temp > t_min) {
 				record.t = temp;
 				record.p = r.PointAtParameter(temp);
-				record.normal = (record.p - origin) / radius;
+				record.normal = (record.p - centre) / radius;
 				return true;
 			}
 		}
