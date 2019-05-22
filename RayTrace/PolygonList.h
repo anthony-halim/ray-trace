@@ -18,7 +18,11 @@ public:
 		bool hitAnything = false;
 		float closestSoFar = t_max;
 
+		int size = listSize;
+
 		for (int i = 0; i < listSize; i++) {
+			int count = i;
+			bool hit = plygonList[i]->IsHit(r, t_min, closestSoFar, tempRec);
 			if (plygonList[i]->IsHit(r, t_min, closestSoFar, tempRec)) {
 				hitAnything = true;
 				closestSoFar = tempRec.t;
