@@ -53,7 +53,7 @@ static void SimulateAndWritePPM() {
 		glm::vec3 lowerLeftCorner(-2.0f, -1.0f, -1.0f);
 		glm::vec3 horizontal(4.0f, 0.0f, 0.0f);
 		glm::vec3 vertical(0.0f, 2.0f, 0.0f);
-		glm::vec3 origin;
+		glm::vec3 origin(0.0f, 0.0f, 0.0f);
 
 		// Scene Initialisation
 		Polygon* list[2];

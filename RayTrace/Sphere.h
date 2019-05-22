@@ -21,11 +21,11 @@ public:
 		glm::vec3 oc = r.GetOrigin() - centre;
 		float a = 1.0f;
 		float b = 2.0f * glm::dot(oc, r.GetDir());
-		float c = 1 - radius * radius;
+		float c = glm::dot(oc, oc) - radius * radius;
 		float discr = b * b - 4 * a * c;
 
 		if (discr > 0) {
-			float temp = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
+			float temp = (-b - sqrt(discr)) / (2 * a);
 
 			if (temp < t_max && temp > t_min) {
 				record.t = temp;
@@ -34,7 +34,7 @@ public:
 				return true;
 			}
 
-			temp = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+			temp = (-b + sqrt(discr)) / (2 * a);
 
 			if (temp < t_max && temp > t_min) {
 				record.t = temp;
