@@ -8,13 +8,15 @@ private:
 
 	glm::vec3 centre;
 	float radius;
+	Material* pMat;
 
 public:
-	Sphere()
-		: centre(glm::vec3(0.0f, 0.0f, 0.0f)), radius(0.0f) {}
 
-	Sphere(const glm::vec3& cent, float r)
-		: centre(cent), radius(r) {}
+	Sphere()
+		: centre(glm::vec3(0.0f, 0.0f, 0.0f)), radius(0.0f), pMat(nullptr) {}
+
+	Sphere(const glm::vec3& cent, float r, Material * mat)
+		: centre(cent), radius(r), pMat(mat) {}
 
 	bool IsHit(const Ray& r, float t_min, float t_max, SHitRecord& record) const override {
 
@@ -31,6 +33,7 @@ public:
 				record.t = temp;
 				record.p = r.PointAtParameter(temp);
 				record.normal = (record.p - centre) / radius;
+				record.pMat_ptr = pMat;
 				return true;
 			}
 
@@ -40,6 +43,7 @@ public:
 				record.t = temp;
 				record.p = r.PointAtParameter(temp);
 				record.normal = (record.p - centre) / radius;
+				record.pMat_ptr = pMat;
 				return true;
 			}
 		}

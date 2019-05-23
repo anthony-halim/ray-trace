@@ -16,5 +16,7 @@ public:
 
 	// Returns a ray where x, y, z are all within (-1, 1)
 	static glm::vec3 GetRandomVec3_unitSphere();
+
+	static glm::vec3 ReflectAboutN(const glm::vec3& v, const glm::vec3& n);
 };
 

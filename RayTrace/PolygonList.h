@@ -26,13 +26,6 @@ public:
 
 		int size = listSize;
 
-		Polygon * one = plygonList[0];
-		Polygon * two = plygonList[1];
-
-		bool res1 = one->IsHit(r, t_min, closestSoFar, tempRec);
-		bool res2 = two->IsHit(r, t_min, closestSoFar, tempRec);
-
-
 		for (int i = 0; i < listSize; i++) {
 			int count = i;
 			bool hit = plygonList[i]->IsHit(r, t_min, closestSoFar, tempRec);

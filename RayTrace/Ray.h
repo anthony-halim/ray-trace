@@ -10,7 +10,6 @@ private:
 	glm::vec3 origin;
 	glm::vec3 dir;
 
-
 public:
 	
 	Ray()

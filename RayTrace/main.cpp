@@ -1,24 +1,27 @@
 #include "Util.h"
 #include "PolygonList.h"
+#include "LambertianDiffuse.h"
+#include "Metal.h"
 #include "Sphere.h"
 #include "Camera.h"
 
 
-#define IMAGE_WIDTH 200
-#define IMAGE_HEIGHT 100
+#define IMAGE_WIDTH 512
+#define IMAGE_HEIGHT 256
 
 #define FILENAME "output.ppm"
 
 #define T_MIN 1.0e-4f
 #define T_MAX 1.0e4f
 #define ANTI_ALIASING_SAMPLE_NUM 50
+#define MAX_RECURSION_LEVEL 50
 
 
 
 // Forward Declaration
 static void SimulateAndWritePPM();
 static void InitialiseScene();
-static glm::vec3 GetColour(const Ray& r, Polygon* world);
+static glm::vec3 GetColour(const Ray& r, Polygon* world, int recursionLevel = 0);
 
 
 
@@ -36,13 +39,20 @@ int main() {
 
 
 
-static glm::vec3 GetColour(const Ray& r, Polygon* world) {
+static glm::vec3 GetColour(const Ray& r, Polygon* world, int recursionLevel) {
+	
 	SHitRecord record;
 
 	if (world->IsHit(r, T_MIN, T_MAX, record)) {
-		// Diffuse
-		glm::vec3 target = record.p + record.normal + Util::GetRandomVec3_unitSphere();
-		return 0.5f * GetColour(Ray(record.p, target - record.p), g_World);
+
+		Ray scattered;
+		glm::vec3 attenuation;
+
+		if (recursionLevel < MAX_RECURSION_LEVEL && record.pMat_ptr->IsScattered(r, record, attenuation, scattered)) {
+			return attenuation * GetColour(scattered, world, recursionLevel + 1);
+		}
+		
+		return glm::vec3(0.0f, 0.0f, 0.0f);
 	}
 	else {
 		float t = 0.5f * (r.GetDir().y + 1.0f);
@@ -54,11 +64,14 @@ static glm::vec3 GetColour(const Ray& r, Polygon* world) {
 
 static void InitialiseScene() {
 
-	Polygon ** list = new Polygon*[2];
-	list[0] = new Sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f);
-	list[1] = new Sphere(glm::vec3(0.0f, -100.5f, -1.0f), 100.0f);
+	Polygon ** list = new Polygon*[4];
 
-	g_World = new PolygonList(list, 2);
+	list[0] = new Sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f, new LambertianDiffuse(glm::vec3(0.8f, 0.3f, 0.3f)));
+	list[1] = new Sphere(glm::vec3(0.0f, -100.5f, -1.0f), 100.0f, new LambertianDiffuse(glm::vec3(0.8f, 0.8f, 0.0f)));
+	list[2] = new Sphere(glm::vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.6f, 0.2f), 0.3f));
+	list[3] = new Sphere(glm::vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.8f, 0.8f), 0.01f));
+	
+	g_World = new PolygonList(list, 4);
 }
 
 
@@ -95,7 +108,7 @@ static void SimulateAndWritePPM() {
 					float v = float(j + ((float)rand() / RAND_MAX)) / float(ny);
 					Ray r = g_MainCamera.GetRay(u, v);
 					glm::vec3 p = r.PointAtParameter(2.0f);
-					colour += GetColour(r, g_World);
+					colour += GetColour(r, g_World, 0);
 				}
 				colour /= float(ns);
 

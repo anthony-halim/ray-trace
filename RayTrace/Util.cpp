@@ -19,3 +19,8 @@ glm::vec3 Util::GetRandomVec3_unitSphere() {
 	return glm::normalize(p);
 }
 
+glm::vec3 Util::ReflectAboutN(const glm::vec3& v, const glm::vec3& n) {
+	glm::vec3 normalisedN = glm::normalize(n);
+	return v - 2 * glm::dot(v, normalisedN) * normalisedN;
+}
+
