@@ -19,9 +19,29 @@ glm::vec3 Util::GetRandomVec3_unitSphere() {
 	return glm::normalize(p);
 }
 
+glm::vec3 Util::GetRandomVec3_unitDisk()
+{
+	glm::vec3 p;
+	
+	float x = (float)rand() / RAND_MAX;
+	float y = (float)rand() / RAND_MAX;
+	float z = 0.0f;
+
+	p = 2.0f * glm::vec3(x, y, z) - glm::vec3(1.0f, 1.0f, 0.0f);
+	return glm::normalize(p);
+}
+
+
 glm::vec3 Util::ReflectAboutN(const glm::vec3& v, const glm::vec3& n) {
 	glm::vec3 normalisedN = glm::normalize(n);
 	return v - 2 * glm::dot(v, normalisedN) * normalisedN;
+}
+
+float Util::FresnelApproximation(float cosine, float refrIndex)
+{
+	float rZero = (1 - refrIndex) / (1 + refrIndex);
+	float rZeroSq = rZero * rZero;
+	return rZeroSq + (1 - rZeroSq) * pow((1 - cosine), 5);
 }
 
 bool Util::Refract(const glm::vec3& v, const glm::vec3& n, float refrIndex, glm::vec3& refracted)

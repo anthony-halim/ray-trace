@@ -92,10 +92,16 @@ static void SimulateAndWritePPM() {
 	int ny = IMAGE_HEIGHT;
 	int ns = ANTI_ALIASING_SAMPLE_NUM;
 
+	glm::vec3 lookFrom(3.0f, 3.0f, 2.0f);
+	glm::vec3 lookAt(0.0f, 0.0f, -1.0f);
+	float focusDist = glm::length(lookFrom - lookAt);
+	float aperture = 2.0f;
+
 	Camera mainCamera(glm::vec3(0.0f, 0.0f, 0.0f), 
 		glm::vec3(0.0f, 0.0f, -1.0f),
 		glm::vec3(0.0f, 1.0f, 0.0f),
-		90.0, ((float)nx) / ny);
+		90.0, ((float)nx) / ny,
+		aperture, focusDist);
 
 	if (myfile.is_open()) {
 

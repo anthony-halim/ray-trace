@@ -23,6 +23,4 @@ public:
 	inline glm::vec3 PointAtParameter(float t) const { return origin + t * dir; }
 	
 	inline void moveOriginBy(float t) { origin += t * dir; }
-	
-	glm::vec3 test = 1.0f * glm::vec3(0.1, 0.1, 0.1);
 };
