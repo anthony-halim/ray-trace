@@ -6,4 +6,16 @@ bool Util::IsFormatPPM(const char* filename)
 	return std::regex_match(filename, r);
 }
 
+glm::vec3 Util::GetRandomVec3_unitSphere() {
+
+	glm::vec3 p;
+
+	float x = (float)rand() / RAND_MAX;
+	float y = (float)rand() / RAND_MAX;
+	float z = (float)rand() / RAND_MAX;
+
+	p = 2.0f * glm::vec3(x, y, z) - glm::vec3(1, 1, 1);
+
+	return glm::normalize(p);
+}
 

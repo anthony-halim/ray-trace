@@ -23,9 +23,9 @@ static glm::vec3 GetColour(const Ray& r, Polygon* world);
 
 
 // Global variables
-bool g_isAntiAliasingActivated = false;
-Camera g_mainCamera;
-Polygon* g_world;
+bool g_IsAntiAliasingActivated = false;
+Camera g_MainCamera;
+PolygonList * g_World = nullptr;
 
 
 
@@ -40,9 +40,9 @@ static glm::vec3 GetColour(const Ray& r, Polygon* world) {
 	SHitRecord record;
 
 	if (world->IsHit(r, T_MIN, T_MAX, record)) {
-		//glm::vec3 target = record.p + record.normal + Util::getRandomVec3_unitSphere();
-		//return 0.5f* GetColour(Ray(record.p, target - record.p), g_world);
-		return 0.5f * glm::vec3(record.normal.x + 1, record.normal.y + 1, record.normal.z + 1);
+		// Diffuse
+		glm::vec3 target = record.p + record.normal + Util::GetRandomVec3_unitSphere();
+		return 0.5f * GetColour(Ray(record.p, target - record.p), g_World);
 	}
 	else {
 		float t = 0.5f * (r.GetDir().y + 1.0f);
@@ -54,11 +54,11 @@ static glm::vec3 GetColour(const Ray& r, Polygon* world) {
 
 static void InitialiseScene() {
 
-	Polygon* list[2];
+	Polygon ** list = new Polygon*[2];
 	list[0] = new Sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f);
 	list[1] = new Sphere(glm::vec3(0.0f, -100.5f, -1.0f), 100.0f);
 
-	g_world = new PolygonList(list, 2);
+	g_World = new PolygonList(list, 2);
 }
 
 
@@ -93,11 +93,14 @@ static void SimulateAndWritePPM() {
 				for (int s = 0; s < ns; s++) {
 					float u = float(i + ((float)rand() / RAND_MAX)) / float(nx);
 					float v = float(j + ((float)rand() / RAND_MAX)) / float(ny);
-					Ray r = g_mainCamera.GetRay(u, v);
+					Ray r = g_MainCamera.GetRay(u, v);
 					glm::vec3 p = r.PointAtParameter(2.0f);
-					colour += GetColour(r, g_world);
+					colour += GetColour(r, g_World);
 				}
 				colour /= float(ns);
+
+				// Gamma correction
+				colour = glm::vec3(pow(colour.x, 0.4), pow(colour.y, 0.4), pow(colour.z, 0.4));
 
 				int ir = int(255.99 * colour.r);
 				int ig = int(255.99 * colour.g);
