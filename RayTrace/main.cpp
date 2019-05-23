@@ -1,7 +1,10 @@
 #include "Util.h"
 #include "PolygonList.h"
+
 #include "LambertianDiffuse.h"
 #include "Metal.h"
+#include "Dielectric.h"
+
 #include "Sphere.h"
 #include "Camera.h"
 
@@ -69,7 +72,7 @@ static void InitialiseScene() {
 	list[0] = new Sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f, new LambertianDiffuse(glm::vec3(0.8f, 0.3f, 0.3f)));
 	list[1] = new Sphere(glm::vec3(0.0f, -100.5f, -1.0f), 100.0f, new LambertianDiffuse(glm::vec3(0.8f, 0.8f, 0.0f)));
 	list[2] = new Sphere(glm::vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.6f, 0.2f), 0.3f));
-	list[3] = new Sphere(glm::vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.8f, 0.8f), 0.01f));
+	list[3] = new Sphere(glm::vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f));
 	
 	g_World = new PolygonList(list, 4);
 }

@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Dielectric.h" />
     <ClInclude Include="LambertianDiffuse.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Metal.h" />

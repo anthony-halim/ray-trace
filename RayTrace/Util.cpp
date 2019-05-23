@@ -24,3 +24,17 @@ glm::vec3 Util::ReflectAboutN(const glm::vec3& v, const glm::vec3& n) {
 	return v - 2 * glm::dot(v, normalisedN) * normalisedN;
 }
 
+bool Util::Refract(const glm::vec3& v, const glm::vec3& n, float refrIndex, glm::vec3& refracted)
+{
+	glm::vec3 normalisedV = glm::normalize(v);
+	float dt = glm::dot(normalisedV, n);
+
+	float discr = 1.0f - refrIndex * refrIndex * (1.0f - dt * dt);
+
+	if (discr > 0) {
+		refracted = refrIndex * (normalisedV - n * dt) - n * sqrt(discr);
+		return true;
+	}
+	return false;
+}
+
