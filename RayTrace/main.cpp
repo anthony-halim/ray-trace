@@ -30,7 +30,6 @@ static glm::vec3 GetColour(const Ray& r, Polygon* world, int recursionLevel = 0)
 
 // Global variables
 bool g_IsAntiAliasingActivated = false;
-Camera g_MainCamera;
 PolygonList * g_World = nullptr;
 
 
@@ -81,10 +80,6 @@ static void InitialiseScene() {
 
 static void SimulateAndWritePPM() {
 	
-	int nx = IMAGE_WIDTH;
-	int ny = IMAGE_HEIGHT;
-	int ns = ANTI_ALIASING_SAMPLE_NUM;
-
 	if (!Util::IsFormatPPM(FILENAME)) {
 		std::cout << "ERROR: " << FILENAME << " is in wrong format. Acceptable file format: <filename>.ppm" << std::endl;
 		return;
@@ -92,6 +87,15 @@ static void SimulateAndWritePPM() {
 
 	std::ofstream myfile;
 	myfile.open(FILENAME);
+
+	int nx = IMAGE_WIDTH;
+	int ny = IMAGE_HEIGHT;
+	int ns = ANTI_ALIASING_SAMPLE_NUM;
+
+	Camera mainCamera(glm::vec3(0.0f, 0.0f, 0.0f), 
+		glm::vec3(0.0f, 0.0f, -1.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f),
+		90.0, ((float)nx) / ny);
 
 	if (myfile.is_open()) {
 
@@ -109,7 +113,7 @@ static void SimulateAndWritePPM() {
 				for (int s = 0; s < ns; s++) {
 					float u = float(i + ((float)rand() / RAND_MAX)) / float(nx);
 					float v = float(j + ((float)rand() / RAND_MAX)) / float(ny);
-					Ray r = g_MainCamera.GetRay(u, v);
+					Ray r = mainCamera.GetRay(u, v);
 					glm::vec3 p = r.PointAtParameter(2.0f);
 					colour += GetColour(r, g_World, 0);
 				}
