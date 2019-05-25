@@ -39,7 +39,7 @@ public:
 		reflectProb = isRefractable * Util::FresnelApproximation(cosine, refrIndex) + !isRefractable * 1.0f;
 
 		bool isReflected = ((float)rand() / RAND_MAX) < reflectProb;
-		scattered = Ray(rec.p, (float)isReflected * reflected + (float)!isReflected * refracted);
+		scattered = Ray(rec.p, (float)isReflected * reflected + (float)!isReflected * refracted, r_in.GetTime());
 		
 		return true;
 	}

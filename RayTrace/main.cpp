@@ -6,6 +6,7 @@
 #include "Dielectric.h"
 
 #include "Sphere.h"
+#include "MovingSphere.h"
 #include "Camera.h"
 
 
@@ -19,7 +20,7 @@
 #define ANTI_ALIASING_SAMPLE_NUM 50
 #define MAX_RECURSION_LEVEL 50
 
-#define CAMERA_APERTURE 0.4f
+#define CAMERA_APERTURE 0.01f
 
 // Forward Declaration
 static void SimulateAndWritePPM();
@@ -71,7 +72,7 @@ static void InitialiseScene() {
 	list[0] = new Sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f, new LambertianDiffuse(glm::vec3(0.8f, 0.3f, 0.3f)));
 	list[1] = new Sphere(glm::vec3(0.0f, -100.5f, -1.0f), 100.0f, new LambertianDiffuse(glm::vec3(0.8f, 0.8f, 0.0f)));
 	list[2] = new Sphere(glm::vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.6f, 0.2f), 0.3f));
-	list[3] = new Sphere(glm::vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f));
+	list[3] = new MovingSphere(glm::vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.6f, 0.2f), 0.3f), 0.25, 1.0, 0.0);
 	
 	g_World = new PolygonList(list, 4);
 }
@@ -92,7 +93,7 @@ static void SimulateAndWritePPM() {
 	int ny = IMAGE_HEIGHT;
 	int ns = ANTI_ALIASING_SAMPLE_NUM;
 
-	glm::vec3 lookFrom(3.0f, 3.0f, 2.0f);
+	glm::vec3 lookFrom(0.0f, 0.0f, 0.0f);
 	glm::vec3 lookAt(0.0f, 0.0f, -1.0f);
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
 	float focusDist = glm::length(lookFrom - lookAt);
@@ -101,6 +102,8 @@ static void SimulateAndWritePPM() {
 	Camera mainCamera(lookFrom, lookAt, up,
 		90.0, ((float)nx) / ny,
 		aperture, focusDist);
+
+	mainCamera.SetShutterTiming(1.0f, 0.0f);
 
 	if (myfile.is_open()) {
 
