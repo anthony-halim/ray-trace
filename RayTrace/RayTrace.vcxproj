@@ -125,10 +125,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\AABB.cpp" />
+    <ClCompile Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\BVH_Node.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\AABB.h" />
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\BVH_Node.h" />
     <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\MovingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Dielectric.h" />

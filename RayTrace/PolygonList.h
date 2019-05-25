@@ -37,5 +37,24 @@ public:
 		}
 		return hitAnything;
 	}
+
+	virtual bool BoundingBox(float t0, float t1, AABB& box) const override {
+		if (listSize < 1) return false;
+		AABB tempBox;
+		bool firstTrue = plygonList[0]->BoundingBox(t0, t1, tempBox);
+
+		if (!firstTrue) return false;
+
+		box = tempBox;
+
+		for (int i = 1; i < listSize; i++) {
+			if (plygonList[i]->BoundingBox(t0, t1, tempBox)) {
+				box = Util::SurroundingBox(box, tempBox);
+			}
+			else { return false; }
+		}
+
+		return true;
+	}
 };
 

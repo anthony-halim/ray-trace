@@ -50,4 +50,9 @@ public:
 
 		return false;
 	}
+
+	virtual bool BoundingBox(float t0, float t1, AABB& box) const override {
+		box = AABB(centre - glm::vec3(radius, radius, radius), centre + glm::vec3(radius, radius, radius));
+		return true;
+	}
 };

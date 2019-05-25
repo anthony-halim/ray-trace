@@ -4,8 +4,6 @@
 
 class MovingSphere : public Polygon {
 
-private:
-
 	glm::vec3 centre;
 	float radius;
 	Material* pMat;
@@ -65,4 +63,17 @@ public:
 
 		return false;
 	}
+
+	bool BoundingBox(float t0, float t1, AABB& box) const override {
+		glm::vec3 centreAtStart = GetCentreAtInstant(tInitial);
+		glm::vec3 centreAtEnd = GetCentreAtInstant(tInitial + movementDuration);
+		
+		AABB boxTimeStart = AABB(centreAtStart - glm::vec3(radius, radius, radius), centreAtStart + glm::vec3(radius, radius, radius));
+		AABB boxTimeEnd = AABB(centreAtEnd - glm::vec3(radius, radius, radius), centreAtEnd + glm::vec3(radius, radius, radius));
+		
+		box = Util::SurroundingBox(boxTimeStart, boxTimeEnd);
+		
+		return true;
+	}
+
 };
