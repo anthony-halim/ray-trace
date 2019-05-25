@@ -7,8 +7,9 @@
 
 #include "Sphere.h"
 #include "MovingSphere.h"
-#include "Camera.h"
 
+#include "BVH_Node.h"
+#include "Camera.h"
 
 #define IMAGE_WIDTH 512
 #define IMAGE_HEIGHT 256
@@ -31,7 +32,7 @@ static glm::vec3 GetColour(const Ray& r, Polygon* world, int recursionLevel = 0)
 
 // Global variables
 bool g_IsAntiAliasingActivated = false;
-PolygonList * g_World = nullptr;
+BVH_Node* g_WorldRoot = nullptr;
 
 
 
@@ -67,6 +68,8 @@ static glm::vec3 GetColour(const Ray& r, Polygon* world, int recursionLevel) {
 
 static void InitialiseScene() {
 
+	std::cout << "Initialising scene..." << std::endl;
+
 	Polygon ** list = new Polygon*[4];
 
 	list[0] = new Sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f, new LambertianDiffuse(glm::vec3(0.8f, 0.3f, 0.3f)));
@@ -74,7 +77,12 @@ static void InitialiseScene() {
 	list[2] = new Sphere(glm::vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.6f, 0.2f), 0.3f));
 	list[3] = new MovingSphere(glm::vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.6f, 0.2f), 0.3f), 0.25, 1.0, 0.0);
 	
-	g_World = new PolygonList(list, 4);
+	std::cout << "Initialising BVH Tree..." << std::endl;
+
+	g_WorldRoot = new BVH_Node(list, 4, 0.0f, 0.0f);
+
+	std::cout << "Finished setting up BVH Tree." << std::endl;
+	std::cout << "Finished initialising scene." << std::endl;
 }
 
 
@@ -107,7 +115,7 @@ static void SimulateAndWritePPM() {
 
 	if (myfile.is_open()) {
 
-		std::cout << "Writing into file " << std::string(FILENAME) << std::endl;
+		std::cout << "Writing into file: " << std::string(FILENAME) << std::endl;
 
 		myfile << "P3\n" << nx << " " << ny << std::endl;
 		myfile << "255" << std::endl;
@@ -123,7 +131,7 @@ static void SimulateAndWritePPM() {
 					float v = float(j + ((float)rand() / RAND_MAX)) / float(ny);
 					Ray r = mainCamera.GetRay(u, v);
 					glm::vec3 p = r.PointAtParameter(2.0f);
-					colour += GetColour(r, g_World, 0);
+					colour += GetColour(r, g_WorldRoot, 0);
 				}
 				colour /= float(ns);
 

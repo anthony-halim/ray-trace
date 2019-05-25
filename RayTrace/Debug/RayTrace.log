@@ -1,2 +1,5 @@
-﻿  BVH_Node.cpp
+﻿  AABB.cpp
+  BVH_Node.cpp
+  main.cpp
+  Generating Code...
   RayTrace.vcxproj -> C:\Users\Anthony's PC\source\repos\RayTrace\Debug\RayTrace.exe
