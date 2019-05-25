@@ -19,7 +19,7 @@
 #define ANTI_ALIASING_SAMPLE_NUM 50
 #define MAX_RECURSION_LEVEL 50
 
-
+#define CAMERA_APERTURE 0.4f
 
 // Forward Declaration
 static void SimulateAndWritePPM();
@@ -94,12 +94,11 @@ static void SimulateAndWritePPM() {
 
 	glm::vec3 lookFrom(3.0f, 3.0f, 2.0f);
 	glm::vec3 lookAt(0.0f, 0.0f, -1.0f);
+	glm::vec3 up(0.0f, 1.0f, 0.0f);
 	float focusDist = glm::length(lookFrom - lookAt);
-	float aperture = 2.0f;
+	float aperture = CAMERA_APERTURE;
 
-	Camera mainCamera(glm::vec3(0.0f, 0.0f, 0.0f), 
-		glm::vec3(0.0f, 0.0f, -1.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f),
+	Camera mainCamera(lookFrom, lookAt, up,
 		90.0, ((float)nx) / ny,
 		aperture, focusDist);
 
