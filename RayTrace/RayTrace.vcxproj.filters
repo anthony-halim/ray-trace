@@ -16,6 +16,9 @@
     <Filter Include="Header Files\Materials">
       <UniqueIdentifier>{79b683af-8171-4db7-8202-e61f7533bdc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Textures">
+      <UniqueIdentifier>{d0e81858-9e88-415c-82e7-9a824290c699}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,6 +73,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\BVH_Node.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\Texture.h">
+      <Filter>Header Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\ConstantTexture.h">
+      <Filter>Header Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\CheckeredTexture.h">
+      <Filter>Header Files\Textures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

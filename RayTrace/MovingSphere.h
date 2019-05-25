@@ -4,29 +4,28 @@
 
 class MovingSphere : public Polygon {
 
-	glm::vec3 centre;
+	glm::vec3 centreZero;
+	glm::vec3 centreFinal;
 	float radius;
 	Material* pMat;
 
 	//Movement information
-	float movementRange;
 	float movementDuration;
 	float tInitial;
 
 public:
 
 	MovingSphere()
-		: centre(glm::vec3(0.0f, 0.0f, 0.0f)), radius(0.0f), pMat(nullptr),
-		movementRange(0.0f), movementDuration(0.0f), tInitial(0.0f) {}
+		: centreZero(glm::vec3(0.0f, 0.0f, 0.0f)), centreFinal(glm::vec3(0.0f, 0.0f, 0.0f)), 
+			radius(0.0f), pMat(nullptr), movementDuration(0.0f), tInitial(0.0f) {}
 
-	MovingSphere(const glm::vec3& cent, float r, Material* mat,
-		float range, float dur, float t0)
-		: centre(cent), radius(r), pMat(mat),
-		movementRange(range), movementDuration(dur), tInitial(t0) {}
+	MovingSphere(const glm::vec3& cent0, const glm::vec3& cent1, float r, Material* mat, float dur, float t0)
+		: centreZero(cent0), centreFinal(cent1), radius(r), pMat(mat), movementDuration(dur), tInitial(t0) {}
 
 	glm::vec3 GetCentreAtInstant(float t) const {
 		float intP;
-		return centre + (std::modf((t / movementDuration), &intP) * movementRange);
+		glm::vec3 movementDir = centreFinal - centreZero;
+		return centreZero + (std::modf((t / movementDuration), &intP) * movementDir);
 	}
 
 	bool IsHit(const Ray& r, float t_min, float t_max, SHitRecord& record) const override {

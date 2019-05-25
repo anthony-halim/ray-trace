@@ -133,7 +133,10 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\AABB.h" />
     <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\BVH_Node.h" />
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\CheckeredTexture.h" />
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\ConstantTexture.h" />
     <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\MovingSphere.h" />
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\Texture.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Dielectric.h" />
     <ClInclude Include="LambertianDiffuse.h" />

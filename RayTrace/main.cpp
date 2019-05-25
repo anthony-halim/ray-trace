@@ -1,15 +1,16 @@
 #include "Util.h"
-#include "PolygonList.h"
+#include "BVH_Node.h"
+#include "Camera.h"
 
 #include "LambertianDiffuse.h"
 #include "Metal.h"
 #include "Dielectric.h"
 
+#include "ConstantTexture.h"
+#include "CheckeredTexture.h"
+
 #include "Sphere.h"
 #include "MovingSphere.h"
-
-#include "BVH_Node.h"
-#include "Camera.h"
 
 #define IMAGE_WIDTH 512
 #define IMAGE_HEIGHT 256
@@ -28,6 +29,8 @@ static void SimulateAndWritePPM();
 static void InitialiseScene();
 static glm::vec3 GetColour(const Ray& r, Polygon* world, int recursionLevel = 0);
 
+static Polygon** TestScene(int& listSize);
+static Polygon** RandomScene(int& listSize);
 
 
 // Global variables
@@ -70,17 +73,14 @@ static void InitialiseScene() {
 
 	std::cout << "Initialising scene..." << std::endl;
 
-	Polygon ** list = new Polygon*[4];
+	int listSize;
+	Polygon** sceneObjList = RandomScene(listSize);
 
-	list[0] = new Sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f, new LambertianDiffuse(glm::vec3(0.8f, 0.3f, 0.3f)));
-	list[1] = new Sphere(glm::vec3(0.0f, -100.5f, -1.0f), 100.0f, new LambertianDiffuse(glm::vec3(0.8f, 0.8f, 0.0f)));
-	list[2] = new Sphere(glm::vec3(1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.6f, 0.2f), 0.3f));
-	list[3] = new MovingSphere(glm::vec3(-1.0f, 0.0f, -1.0f), 0.5f, new Metal(glm::vec3(0.8f, 0.6f, 0.2f), 0.3f), 0.25, 1.0, 0.0);
-	
+	std::cout << "Number of objects in the scene: " << listSize << std::endl;
 	std::cout << "Initialising BVH Tree..." << std::endl;
 
-	g_WorldRoot = new BVH_Node(list, 4, 0.0f, 0.0f);
-
+	g_WorldRoot = new BVH_Node(sceneObjList, listSize, 0.0f, 0.0f);
+	
 	std::cout << "Finished setting up BVH Tree." << std::endl;
 	std::cout << "Finished initialising scene." << std::endl;
 }
@@ -101,14 +101,14 @@ static void SimulateAndWritePPM() {
 	int ny = IMAGE_HEIGHT;
 	int ns = ANTI_ALIASING_SAMPLE_NUM;
 
-	glm::vec3 lookFrom(0.0f, 0.0f, 0.0f);
-	glm::vec3 lookAt(0.0f, 0.0f, -1.0f);
+	glm::vec3 lookFrom(13.0f, 2.0f, 3.0f);
+	glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
-	float focusDist = glm::length(lookFrom - lookAt);
+	float focusDist = 10.0f;
 	float aperture = CAMERA_APERTURE;
 
 	Camera mainCamera(lookFrom, lookAt, up,
-		90.0, ((float)nx) / ny,
+		17.5, ((float)nx) / ny,
 		aperture, focusDist);
 
 	mainCamera.SetShutterTiming(1.0f, 0.0f);
@@ -154,5 +154,89 @@ static void SimulateAndWritePPM() {
 		std::cout << "ERROR: File " << std::string(FILENAME) << " unable to be written to." << std::endl;
 		return;
 	}
+}
+
+static Polygon** TestScene(int& listSize) {
+
+	int n = 4;
+	Polygon** list = new Polygon * [n];
+	
+	list[0] = new Sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f,
+		new LambertianDiffuse(new ConstantTexture(glm::vec3(0.8f, 0.3f, 0.3f))));
+
+	list[1] = new Sphere(glm::vec3(0.0f, -100.5f, -1.0f), 100.0f,
+		new LambertianDiffuse(new ConstantTexture(glm::vec3(0.8f, 0.8f, 0.0f))));
+
+	list[2] = new Sphere(glm::vec3(1.0f, 0.0f, -1.0f), 0.5f,
+		new Metal(new CheckeredTexture(
+			new ConstantTexture(glm::vec3(0.8f, 0.6f, 0.2f)),
+			new ConstantTexture(glm::vec3(0.3f, 0.8f, 0.2f)),
+			10), 0.3f));
+
+	list[3] = new MovingSphere(glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(-1.0f, 0.3f, -1.0f), 0.5f,
+		new Dielectric(2.417f), 1.0, 0.0);
+
+	listSize = n;
+	return list;
+}
+
+static Polygon** RandomScene(int& listSize) {
+
+	int n = 400;
+
+	Polygon** list = new Polygon * [n + 1];
+	
+	Texture* checker = new CheckeredTexture(
+		new ConstantTexture(glm::vec3(0.2f, 0.3f, 0.1f)),
+		new ConstantTexture(glm::vec3(0.9f, 0.9f, 0.9f)), 10);
+
+	list[0] = new Sphere(glm::vec3(0.0f, -1000.0f, 0.0f), 1000.0f,
+		new LambertianDiffuse(checker));
+
+	int i = 1;
+	for (int a = -5; a < 5; a++) {
+		for (int b = -5; b < 5; b++) {
+			
+			float matChoice = (float)rand() / RAND_MAX;
+			glm::vec3 centre(a + 0.9f * (float)rand() / RAND_MAX, 0.2f, b + 0.9f * (float)rand() / RAND_MAX);
+			
+			if (glm::length(centre - glm::vec3(4.0f, 0.2f, 0.0f)) > 0.9f) {
+				if (matChoice < 0.8f) { // Diffuse
+					
+					Texture* randConstTex = new ConstantTexture(
+						glm::vec3(((float)rand()) / RAND_MAX, 
+								  ((float)rand()) / RAND_MAX, 
+								  ((float)rand()) / RAND_MAX));
+					
+					list[i++] = new MovingSphere(
+						centre, centre + glm::vec3(0, 0.5f * ((float)rand()) / RAND_MAX, 0), 0.2f,
+						new LambertianDiffuse(randConstTex), 1.0f, 0.0f);
+				
+				}
+				else if (matChoice < 0.95f) { // Metal
+
+					Texture* randMetalConstTex = new ConstantTexture(
+						glm::vec3(0.5f * (1.0f + ((float)rand()) / RAND_MAX),
+								  0.5f * (1.0f + ((float)rand()) / RAND_MAX),
+								  0.5f * (1.0f + ((float)rand()) / RAND_MAX)));
+
+					list[i++] = new Sphere(centre, 0.2f,
+						new Metal(randMetalConstTex, 0.5f * (float)rand() / RAND_MAX));
+				}
+				else { // Glass
+					list[i++] = new Sphere(centre, 0.2f, new Dielectric(1.5f));
+				}
+			}
+		}
+	}
+
+	list[i++] = new Sphere(glm::vec3(0.0f, 1.0f, 0.0f), 1.0f, new Dielectric(2.7f));
+	list[i++] = new Sphere(glm::vec3(-4.0f, 1.0f, 0.0f), 1.0f, new LambertianDiffuse(
+		new ConstantTexture(glm::vec3(0.4f, 0.2f, 0.1f))));
+	list[i++] = new Sphere(glm::vec3(4.0f, 1.0f, 0.0f), 1.0f, new Metal(
+		new ConstantTexture(glm::vec3(0.7f, 0.6f, 0.5f)), 0.1f));
+
+	listSize = i;
+	return list;
 }
 

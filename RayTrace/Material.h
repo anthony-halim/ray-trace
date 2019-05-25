@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Polygon.h"
+#include "Texture.h"
 
 class Material {
 public:
