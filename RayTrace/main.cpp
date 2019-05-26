@@ -8,6 +8,7 @@
 
 #include "ConstantTexture.h"
 #include "CheckeredTexture.h"
+#include "NoiseTexture.h"
 
 #include "Sphere.h"
 #include "MovingSphere.h"
@@ -27,11 +28,11 @@
 // Forward Declaration
 static void SimulateAndWritePPM();
 static void InitialiseScene();
-static glm::vec3 GetColour(const Ray& r, Polygon* world, int recursionLevel = 0);
+static glm::vec3 RayTrace(const Ray& r, Polygon* world, int recursionLevel = 0);
 
 static Polygon** TestScene(int& listSize);
 static Polygon** RandomScene(int& listSize);
-
+static Polygon** PerlinScene(int& listSize);
 
 // Global variables
 bool g_IsAntiAliasingActivated = false;
@@ -46,7 +47,7 @@ int main() {
 
 
 
-static glm::vec3 GetColour(const Ray& r, Polygon* world, int recursionLevel) {
+static glm::vec3 RayTrace(const Ray& r, Polygon* world, int recursionLevel) {
 	
 	SHitRecord record;
 
@@ -56,7 +57,7 @@ static glm::vec3 GetColour(const Ray& r, Polygon* world, int recursionLevel) {
 		glm::vec3 attenuation;
 
 		if (recursionLevel < MAX_RECURSION_LEVEL && record.pMat_ptr->IsScattered(r, record, attenuation, scattered)) {
-			return attenuation * GetColour(scattered, world, recursionLevel + 1);
+			return attenuation * RayTrace(scattered, world, recursionLevel + 1);
 		}
 		
 		return glm::vec3(0.0f, 0.0f, 0.0f);
@@ -74,7 +75,7 @@ static void InitialiseScene() {
 	std::cout << "Initialising scene..." << std::endl;
 
 	int listSize;
-	Polygon** sceneObjList = RandomScene(listSize);
+	Polygon** sceneObjList = PerlinScene(listSize);
 
 	std::cout << "Number of objects in the scene: " << listSize << std::endl;
 	std::cout << "Initialising BVH Tree..." << std::endl;
@@ -108,7 +109,7 @@ static void SimulateAndWritePPM() {
 	float aperture = CAMERA_APERTURE;
 
 	Camera mainCamera(lookFrom, lookAt, up,
-		17.5, ((float)nx) / ny,
+		20.0, ((float)nx) / ny,
 		aperture, focusDist);
 
 	mainCamera.SetShutterTiming(1.0f, 0.0f);
@@ -131,7 +132,7 @@ static void SimulateAndWritePPM() {
 					float v = float(j + ((float)rand() / RAND_MAX)) / float(ny);
 					Ray r = mainCamera.GetRay(u, v);
 					glm::vec3 p = r.PointAtParameter(2.0f);
-					colour += GetColour(r, g_WorldRoot, 0);
+					colour += RayTrace(r, g_WorldRoot, 0);
 				}
 				colour /= float(ns);
 
@@ -240,3 +241,16 @@ static Polygon** RandomScene(int& listSize) {
 	return list;
 }
 
+static Polygon** PerlinScene(int& listSize) {
+	
+	int n = 2;
+	Polygon** list = new Polygon * [2];
+
+	Texture* perTex = new NoiseTexture(2.5f, 1);
+
+	list[0] = new Sphere(glm::vec3(0.0f, -1000.0f, 0.0f), 1000, new LambertianDiffuse(perTex));
+	list[1] = new Sphere(glm::vec3(0.0f, 2.0f, 0.0f), 2, new LambertianDiffuse(perTex));
+
+	listSize = n;
+	return list;
+}

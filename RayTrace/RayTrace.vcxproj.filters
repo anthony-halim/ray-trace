@@ -19,6 +19,9 @@
     <Filter Include="Header Files\Textures">
       <UniqueIdentifier>{d0e81858-9e88-415c-82e7-9a824290c699}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Noise">
+      <UniqueIdentifier>{e1320b88-5b3b-4075-9676-9d1151f597b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,6 +84,12 @@
       <Filter>Header Files\Textures</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\CheckeredTexture.h">
+      <Filter>Header Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\Perlin.h">
+      <Filter>Header Files\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\NoiseTexture.h">
       <Filter>Header Files\Textures</Filter>
     </ClInclude>
   </ItemGroup>
