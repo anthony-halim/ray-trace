@@ -55,7 +55,6 @@ static glm::vec3 RayTrace(const Ray& r, Polygon* world, int recursionLevel) {
 
 		Ray scattered;
 		glm::vec3 attenuation;
-
 		if (recursionLevel < MAX_RECURSION_LEVEL && record.pMat_ptr->IsScattered(r, record, attenuation, scattered)) {
 			return attenuation * RayTrace(scattered, world, recursionLevel + 1);
 		}
