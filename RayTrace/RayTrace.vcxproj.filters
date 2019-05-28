@@ -92,7 +92,7 @@
     <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\NoiseTexture.h">
       <Filter>Header Files\Textures</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\DiffuseLight.h">
+    <ClInclude Include="DiffuseLight.h">
       <Filter>Header Files\Materials</Filter>
     </ClInclude>
   </ItemGroup>
