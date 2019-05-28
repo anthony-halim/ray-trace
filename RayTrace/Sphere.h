@@ -12,6 +12,18 @@ private:
 	float radius;
 	Material* pMat;
 
+private:
+
+	void GetUV(SHitRecord& record) const {
+		glm::vec3 correctedP = (record.p - centre) / radius;
+
+		float phi = glm::atan(correctedP.z, correctedP.x);
+		float theta = glm::asin(correctedP.y);
+
+		record.u = 1 - (phi - M_PI) / (2 * M_PI);
+		record.v = (theta + M_PI / 2) / M_PI;
+	}
+
 public:
 
 	Sphere()
@@ -60,13 +72,4 @@ public:
 		return true;
 	}
 
-	virtual void GetUV(SHitRecord& record) const override {
-		glm::vec3 correctedP = (record.p - centre) / radius;
-		
-		float phi = glm::atan(correctedP.z, correctedP.x);
-		float theta = glm::asin(correctedP.y);
-		
-		record.u = 1 - (phi - M_PI) / (2 * M_PI);
-		record.v = (theta + M_PI / 2) / M_PI;
-	}
 };

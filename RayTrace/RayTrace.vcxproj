@@ -135,10 +135,13 @@
     <ClInclude Include="BVH_Node.h" />
     <ClInclude Include="CheckeredTexture.h" />
     <ClInclude Include="ConstantTexture.h" />
+    <ClInclude Include="DiffuseLight.h" />
+    <ClInclude Include="FlipNormals.h" />
     <ClInclude Include="ImageTexture.h" />
     <ClInclude Include="MovingSphere.h" />
     <ClInclude Include="NoiseTexture.h" />
     <ClInclude Include="Perlin.h" />
+    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Camera.h" />

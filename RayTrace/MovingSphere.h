@@ -48,7 +48,8 @@ public:
 				record.p = r.PointAtParameter(temp);
 				record.normal = (record.p - newCentre) / radius;
 				record.pMat_ptr = pMat;
-				GetUV(record);
+				record.u = 0.0f;
+				record.v = 0.0f;
 				return true;
 			}
 
@@ -59,7 +60,8 @@ public:
 				record.p = r.PointAtParameter(temp);
 				record.normal = (record.p - newCentre) / radius;
 				record.pMat_ptr = pMat;
-				GetUV(record);
+				record.u = 0.0f;
+				record.v = 0.0f;
 				return true;
 			}
 		}

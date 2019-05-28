@@ -25,6 +25,9 @@
     <Filter Include="Header Files\Misc">
       <UniqueIdentifier>{0bd83c52-8419-45e3-aa06-82d421dc84b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Objects">
+      <UniqueIdentifier>{e55929be-15d2-4952-83c9-38a26d34741a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -42,12 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Polygon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PolygonList.h">
@@ -89,9 +86,6 @@
     <ClInclude Include="BVH_Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MovingSphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ImageTexture.h">
       <Filter>Header Files\Textures</Filter>
     </ClInclude>
@@ -100,6 +94,24 @@
     </ClInclude>
     <ClInclude Include="Util.h">
       <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="DiffuseLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingSphere.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="FlipNormals.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

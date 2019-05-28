@@ -5,6 +5,7 @@
 #include "BVH_Node.h"
 #include "Camera.h"
 
+#include "DiffuseLight.h"
 #include "LambertianDiffuse.h"
 #include "Metal.h"
 #include "Dielectric.h"
@@ -14,6 +15,8 @@
 #include "CheckeredTexture.h"
 #include "NoiseTexture.h"
 
+#include "FlipNormals.h"
+#include "Rectangle.h"
 #include "Sphere.h"
 #include "MovingSphere.h"
 
@@ -40,6 +43,7 @@ static Polygon** SimpleScene(int& listSize);
 static Polygon** RandomScene(int& listSize);
 static Polygon** PerlinScene(int& listSize);
 static Polygon** TestScene(int& listSize);
+static Polygon** CornellBoxScene(int& listSize);
 
 // Global variables
 bool g_IsAntiAliasingActivated = false;
@@ -63,16 +67,14 @@ static glm::vec3 RayTrace(const Ray& r, Polygon* world, int recursionLevel) {
 
 		Ray scattered;
 		glm::vec3 attenuation;
-
+		glm::vec3 emitted = record.pMat_ptr->Emits(record.u, record.v, record.p);
 		if (recursionLevel < MAX_RECURSION_LEVEL && record.pMat_ptr->IsScattered(r, record, attenuation, scattered)) {
-			return attenuation * RayTrace(scattered, world, recursionLevel + 1);
+			return emitted + attenuation * RayTrace(scattered, world, recursionLevel + 1);
 		}
-		
-		return glm::vec3(0.0f, 0.0f, 0.0f);
+		return emitted;
 	}
 	else {
-		float t = 0.5f * (r.GetDir().y + 1.0f);
-		return (1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
+		return glm::vec3(0.0f, 0.0f, 0.0f);
 	}
 }
 
@@ -95,7 +97,7 @@ static void InitialiseScene() {
 	std::cout << "Initialising scene..." << std::endl;
 
 	int listSize;
-	Polygon** sceneObjList = TestScene(listSize);
+	Polygon** sceneObjList = CornellBoxScene(listSize);
 
 	std::cout << "Number of objects in the scene: " << listSize << std::endl;
 	std::cout << "Initialising BVH Tree..." << std::endl;
@@ -129,14 +131,15 @@ static void SimulateAndWritePPM() {
 	int ny = IMAGE_HEIGHT;
 	int ns = ANTI_ALIASING_SAMPLE_NUM;
 
-	glm::vec3 lookFrom(13.0f, 2.0f, 3.0f);
-	glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
+	glm::vec3 lookFrom(278.f, 278.f, -800.f);
+	glm::vec3 lookAt(278.f, 278.f, 0.0f);
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
+	float vfov = 40.0f;
 	float focusDist = 10.0f;
 	float aperture = CAMERA_APERTURE;
 
 	Camera mainCamera(lookFrom, lookAt, up,
-		20.0, ((float)nx) / ny,
+		vfov, ((float)nx) / ny,
 		aperture, focusDist);
 
 	mainCamera.SetShutterTiming(1.0f, 0.0f);
@@ -271,7 +274,7 @@ static Polygon** RandomScene(int& listSize) {
 static Polygon** PerlinScene(int& listSize) {
 	
 	int n = 2;
-	Polygon** list = new Polygon * [2];
+	Polygon** list = new Polygon * [n];
 
 	Texture* perTex = new NoiseTexture(2.5f, 1);
 
@@ -283,15 +286,39 @@ static Polygon** PerlinScene(int& listSize) {
 }
 
 static Polygon** TestScene(int& listSize) {
-	int n = 2;
-	Polygon** list = new Polygon * [2];
+	int n = 4;
+	Polygon** list = new Polygon * [n];
 
-	Texture* perTex = new NoiseTexture(2.5f, 1);
-	Texture* earthTex = CreateImageTexture("earthmap.jpg");
+	Texture* perTex = new NoiseTexture(4.0f, 1);
 
 	list[0] = new Sphere(glm::vec3(0.0f, -1000.0f, 0.0f), 1000, new LambertianDiffuse(perTex));
-	list[1] = new Sphere(glm::vec3(0.0f, 2.0f, 0.0f), 2, new LambertianDiffuse(earthTex));
+	list[1] = new Sphere(glm::vec3(0.0f, 2.0f, 0.0f), 2, new LambertianDiffuse(perTex));
+	list[2] = new Sphere(glm::vec3(0.0, 7.0f, 0.0f), 2, new DiffuseLight(new ConstantTexture(glm::vec3(4.0f, 4.0f, 4.0f))));
+	list[3] = new Rectangle_XY(3, 5, 1, 3, -2, new DiffuseLight(new ConstantTexture(glm::vec3(4.0f, 4.0f, 4.0f))));
 
 	listSize = n;
+	return list;
+}
+
+static Polygon** CornellBoxScene(int& listSize) {
+
+	int n = 6;
+	Polygon** list = new Polygon * [n];
+
+	int i = 0;
+
+	Material* red = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.65f, 0.05f, 0.05f)));
+	Material* white = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.73f, 0.73f, 0.73f)));
+	Material* green = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.12f, 0.45f, 0.15f)));
+	Material* light = new DiffuseLight(new ConstantTexture(glm::vec3(15.0f, 15.0f, 15.0f)));
+
+	list[i++] = new FlipNormals(new Rectangle_YZ(0, 555, 0, 555, 555, green));
+	list[i++] = new Rectangle_YZ(0, 555, 0, 555, 0, red);
+	list[i++] = new Rectangle_XZ(213, 343, 227, 332, 554, light);
+	list[i++] = new FlipNormals(new Rectangle_XZ(0, 555, 0, 555, 555, white));
+	list[i++] = new Rectangle_XZ(0, 555, 0, 555, 0, white);
+	list[i++] = new FlipNormals(new Rectangle_XY(0, 555, 0, 555, 555, white));
+
+	listSize = i;
 	return list;
 }
