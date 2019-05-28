@@ -2,6 +2,8 @@
 
 #include "Polygon.h"
 
+#define M_PI 3.14159265358979323846264338327950288f
+
 class Sphere : public Polygon {
 
 private:
@@ -34,6 +36,7 @@ public:
 				record.p = r.PointAtParameter(temp);
 				record.normal = (record.p - centre) / radius;
 				record.pMat_ptr = pMat;
+				GetUV(record);
 				return true;
 			}
 
@@ -44,6 +47,7 @@ public:
 				record.p = r.PointAtParameter(temp);
 				record.normal = (record.p - centre) / radius;
 				record.pMat_ptr = pMat;
+				GetUV(record);
 				return true;
 			}
 		}
@@ -54,5 +58,15 @@ public:
 	virtual bool BoundingBox(float t0, float t1, AABB& box) const override {
 		box = AABB(centre - glm::vec3(radius, radius, radius), centre + glm::vec3(radius, radius, radius));
 		return true;
+	}
+
+	virtual void GetUV(SHitRecord& record) const override {
+		glm::vec3 correctedP = (record.p - centre) / radius;
+		
+		float phi = glm::atan(correctedP.z, correctedP.x);
+		float theta = glm::asin(correctedP.y);
+		
+		record.u = 1 - (phi - M_PI) / (2 * M_PI);
+		record.v = (theta + M_PI / 2) / M_PI;
 	}
 };

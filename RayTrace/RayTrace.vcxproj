@@ -125,20 +125,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\AABB.cpp" />
-    <ClCompile Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\BVH_Node.cpp" />
+    <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="BVH_Node.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\AABB.h" />
-    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\BVH_Node.h" />
-    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\CheckeredTexture.h" />
-    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\ConstantTexture.h" />
-    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\MovingSphere.h" />
-    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\NoiseTexture.h" />
-    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\Perlin.h" />
-    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\Texture.h" />
+    <ClInclude Include="AABB.h" />
+    <ClInclude Include="BVH_Node.h" />
+    <ClInclude Include="CheckeredTexture.h" />
+    <ClInclude Include="ConstantTexture.h" />
+    <ClInclude Include="ImageTexture.h" />
+    <ClInclude Include="MovingSphere.h" />
+    <ClInclude Include="NoiseTexture.h" />
+    <ClInclude Include="Perlin.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Dielectric.h" />
     <ClInclude Include="LambertianDiffuse.h" />

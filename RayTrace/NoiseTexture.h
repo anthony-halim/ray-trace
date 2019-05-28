@@ -18,6 +18,7 @@ public:
 		case 0:
 			return glm::vec3(1.0f, 1.0f, 1.0f) * noise.Noise(scale * p);
 		case 1:
+		default:
 			return glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f * (1 + glm::sin(scale * p.z + scale * noise.Turbulance(p)));
 		}
 	}

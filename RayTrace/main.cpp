@@ -1,3 +1,6 @@
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "Util.h"
 #include "BVH_Node.h"
 #include "Camera.h"
@@ -6,6 +9,7 @@
 #include "Metal.h"
 #include "Dielectric.h"
 
+#include "ImageTexture.h"
 #include "ConstantTexture.h"
 #include "CheckeredTexture.h"
 #include "NoiseTexture.h"
@@ -26,13 +30,16 @@
 #define CAMERA_APERTURE 0.01f
 
 // Forward Declaration
+static Texture* ReadImageTexture(const char* filename);
 static void SimulateAndWritePPM();
 static void InitialiseScene();
+static void CleanUpMemory();
 static glm::vec3 RayTrace(const Ray& r, Polygon* world, int recursionLevel = 0);
 
-static Polygon** TestScene(int& listSize);
+static Polygon** SimpleScene(int& listSize);
 static Polygon** RandomScene(int& listSize);
 static Polygon** PerlinScene(int& listSize);
+static Polygon** TestScene(int& listSize);
 
 // Global variables
 bool g_IsAntiAliasingActivated = false;
@@ -43,6 +50,7 @@ BVH_Node* g_WorldRoot = nullptr;
 int main() {
 	InitialiseScene();
 	SimulateAndWritePPM();
+	CleanUpMemory();
 }
 
 
@@ -70,12 +78,24 @@ static glm::vec3 RayTrace(const Ray& r, Polygon* world, int recursionLevel) {
 
 
 
+static ImageTexture* CreateImageTexture(const char* filename) {
+	int nx, ny, nn;
+	unsigned char* texData = stbi_load(filename, &nx, &ny, &nn, 0);
+
+	if (texData == NULL)
+		std::cout << "Unable to load texture: " << filename << std::endl;
+
+	return new ImageTexture(texData, nx, ny);
+}
+
+
+
 static void InitialiseScene() {
 
 	std::cout << "Initialising scene..." << std::endl;
 
 	int listSize;
-	Polygon** sceneObjList = PerlinScene(listSize);
+	Polygon** sceneObjList = TestScene(listSize);
 
 	std::cout << "Number of objects in the scene: " << listSize << std::endl;
 	std::cout << "Initialising BVH Tree..." << std::endl;
@@ -87,6 +107,13 @@ static void InitialiseScene() {
 }
 
 
+
+static void CleanUpMemory() {
+	std::cout << "Cleaning up memory..." << std::endl;
+	std::cout << "Freeing up memory allocated to BVH Tree." << std::endl;
+	delete g_WorldRoot;
+	std::cout << "Memory clean up is finished." << std::endl;
+}
 
 static void SimulateAndWritePPM() {
 	
@@ -157,7 +184,7 @@ static void SimulateAndWritePPM() {
 	}
 }
 
-static Polygon** TestScene(int& listSize) {
+static Polygon** SimpleScene(int& listSize) {
 
 	int n = 4;
 	Polygon** list = new Polygon * [n];
@@ -250,6 +277,20 @@ static Polygon** PerlinScene(int& listSize) {
 
 	list[0] = new Sphere(glm::vec3(0.0f, -1000.0f, 0.0f), 1000, new LambertianDiffuse(perTex));
 	list[1] = new Sphere(glm::vec3(0.0f, 2.0f, 0.0f), 2, new LambertianDiffuse(perTex));
+
+	listSize = n;
+	return list;
+}
+
+static Polygon** TestScene(int& listSize) {
+	int n = 2;
+	Polygon** list = new Polygon * [2];
+
+	Texture* perTex = new NoiseTexture(2.5f, 1);
+	Texture* earthTex = CreateImageTexture("earthmap.jpg");
+
+	list[0] = new Sphere(glm::vec3(0.0f, -1000.0f, 0.0f), 1000, new LambertianDiffuse(perTex));
+	list[1] = new Sphere(glm::vec3(0.0f, 2.0f, 0.0f), 2, new LambertianDiffuse(earthTex));
 
 	listSize = n;
 	return list;

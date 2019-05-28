@@ -12,17 +12,19 @@ class MovingSphere : public Polygon {
 	//Movement information
 	float movementDuration;
 	float tInitial;
+	float tCurrentFrame;
 
 public:
 
 	MovingSphere()
 		: centreZero(glm::vec3(0.0f, 0.0f, 0.0f)), centreFinal(glm::vec3(0.0f, 0.0f, 0.0f)), 
-			radius(0.0f), pMat(nullptr), movementDuration(0.0f), tInitial(0.0f) {}
+			radius(0.0f), pMat(nullptr), movementDuration(0.0f), tInitial(0.0f), tCurrentFrame(0.0f) {}
 
 	MovingSphere(const glm::vec3& cent0, const glm::vec3& cent1, float r, Material* mat, float dur, float t0)
-		: centreZero(cent0), centreFinal(cent1), radius(r), pMat(mat), movementDuration(dur), tInitial(t0) {}
+		: centreZero(cent0), centreFinal(cent1), radius(r), pMat(mat), movementDuration(dur), tInitial(t0), tCurrentFrame(t0) {}
 
 	glm::vec3 GetCentreAtInstant(float t) const {
+
 		float intP;
 		glm::vec3 movementDir = centreFinal - centreZero;
 		return centreZero + (std::modf((t / movementDuration), &intP) * movementDir);
@@ -46,6 +48,7 @@ public:
 				record.p = r.PointAtParameter(temp);
 				record.normal = (record.p - newCentre) / radius;
 				record.pMat_ptr = pMat;
+				GetUV(record);
 				return true;
 			}
 
@@ -56,6 +59,7 @@ public:
 				record.p = r.PointAtParameter(temp);
 				record.normal = (record.p - newCentre) / radius;
 				record.pMat_ptr = pMat;
+				GetUV(record);
 				return true;
 			}
 		}
@@ -74,5 +78,4 @@ public:
 		
 		return true;
 	}
-
 };
