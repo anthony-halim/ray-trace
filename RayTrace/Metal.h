@@ -16,10 +16,6 @@ public:
 	Metal(Texture * alb, float r)
 		:albedo(alb), roughness(r) {}
 
-	~Metal() {
-		delete albedo;
-	}
-
 	virtual bool IsScattered(const Ray& r_in, const SHitRecord& rec, glm::vec3& attenuation, Ray& scattered) const override {
 		glm::vec3 reflected = Util::ReflectAboutN(r_in.GetDir(), rec.normal);
 		scattered = Ray(rec.p, reflected + roughness * Util::GetRandomVec3_unitSphere(), r_in.GetTime());

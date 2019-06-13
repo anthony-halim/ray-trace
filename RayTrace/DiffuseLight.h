@@ -6,7 +6,6 @@ class DiffuseLight : public Material {
 private:
 	Texture* emit;
 public:
-	DiffuseLight() {}
 	DiffuseLight(Texture* e)
 		: emit(e) {}
 

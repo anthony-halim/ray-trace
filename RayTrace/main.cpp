@@ -19,6 +19,7 @@
 #include "Rectangle.h"
 #include "Sphere.h"
 #include "MovingSphere.h"
+#include "Box.h"
 
 #define IMAGE_WIDTH 512
 #define IMAGE_HEIGHT 256
@@ -54,7 +55,6 @@ BVH_Node* g_WorldRoot = nullptr;
 int main() {
 	InitialiseScene();
 	SimulateAndWritePPM();
-	CleanUpMemory();
 }
 
 
@@ -110,13 +110,6 @@ static void InitialiseScene() {
 
 
 
-static void CleanUpMemory() {
-	std::cout << "Cleaning up memory..." << std::endl;
-	std::cout << "Freeing up memory allocated to BVH Tree." << std::endl;
-	delete g_WorldRoot;
-	std::cout << "Memory clean up is finished." << std::endl;
-}
-
 static void SimulateAndWritePPM() {
 	
 	if (!Util::IsFormatPPM(FILENAME)) {
@@ -134,7 +127,10 @@ static void SimulateAndWritePPM() {
 	glm::vec3 lookFrom(278.f, 278.f, -800.f);
 	glm::vec3 lookAt(278.f, 278.f, 0.0f);
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
-	float vfov = 40.0f;
+	//glm::vec3 lookFrom(13.f, 2.f, 3.f);
+	//glm::vec3 lookAt(0.f, 0.f, 0.f);
+	//glm::vec3 up(0.0f, 1.0f, 0.0f);
+	float vfov = 40.0f;	
 	float focusDist = 10.0f;
 	float aperture = CAMERA_APERTURE;
 
@@ -286,15 +282,18 @@ static Polygon** PerlinScene(int& listSize) {
 }
 
 static Polygon** TestScene(int& listSize) {
-	int n = 4;
+	int n = 3;
 	Polygon** list = new Polygon * [n];
 
 	Texture* perTex = new NoiseTexture(4.0f, 1);
+	
+	int nx, ny, nn;
+	unsigned char* texData = stbi_load("earthmap.jpg", &nx, &ny, &nn, 0);
+	Material* earthMat = new LambertianDiffuse(new ImageTexture(texData, nx, ny));
 
 	list[0] = new Sphere(glm::vec3(0.0f, -1000.0f, 0.0f), 1000, new LambertianDiffuse(perTex));
-	list[1] = new Sphere(glm::vec3(0.0f, 2.0f, 0.0f), 2, new LambertianDiffuse(perTex));
-	list[2] = new Sphere(glm::vec3(0.0, 7.0f, 0.0f), 2, new DiffuseLight(new ConstantTexture(glm::vec3(4.0f, 4.0f, 4.0f))));
-	list[3] = new Rectangle_XY(3, 5, 1, 3, -2, new DiffuseLight(new ConstantTexture(glm::vec3(4.0f, 4.0f, 4.0f))));
+	list[1] = new Sphere(glm::vec3(0.0f, 2.0f, 0.0f), 2, earthMat);
+	list[2] = new Rectangle_XY(3, 5, 1, 3, -2, new DiffuseLight(new ConstantTexture(glm::vec3(4.0f, 4.0f, 4.0f))));
 
 	listSize = n;
 	return list;
@@ -302,23 +301,24 @@ static Polygon** TestScene(int& listSize) {
 
 static Polygon** CornellBoxScene(int& listSize) {
 
-	int n = 6;
+	int n = 8;
 	Polygon** list = new Polygon * [n];
-
-	int i = 0;
 
 	Material* red = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.65f, 0.05f, 0.05f)));
 	Material* white = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.73f, 0.73f, 0.73f)));
 	Material* green = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.12f, 0.45f, 0.15f)));
-	Material* light = new DiffuseLight(new ConstantTexture(glm::vec3(15.0f, 15.0f, 15.0f)));
+	Material* light = new DiffuseLight(new ConstantTexture(glm::vec3(4.0f, 4.0f, 4.0f)));
+	
+	list[0] = new FlipNormals(new Rectangle_YZ(0, 555, 0, 555, 555, green));
+	list[1] = new Rectangle_YZ(0, 555, 0, 555, 0, red);
+	list[2] = new Rectangle_XZ(213, 343, 227, 332, 554, light);
+	list[3] = new FlipNormals(new Rectangle_XZ(0, 555, 0, 555, 555, white));
+	list[4] = new Rectangle_XZ(0, 555, 0, 555, 0, white);
+	list[5] = new FlipNormals(new Rectangle_XY(0, 555, 0, 555, 555, white));
 
-	list[i++] = new FlipNormals(new Rectangle_YZ(0, 555, 0, 555, 555, green));
-	list[i++] = new Rectangle_YZ(0, 555, 0, 555, 0, red);
-	list[i++] = new Rectangle_XZ(213, 343, 227, 332, 554, light);
-	list[i++] = new FlipNormals(new Rectangle_XZ(0, 555, 0, 555, 555, white));
-	list[i++] = new Rectangle_XZ(0, 555, 0, 555, 0, white);
-	list[i++] = new FlipNormals(new Rectangle_XY(0, 555, 0, 555, 555, white));
+	list[6] = new Box(glm::vec3(130.0f, 0.0f, 65.0f), glm::vec3(295.0f, 165.0f, 230.0f), white);
+	list[7] = new Box(glm::vec3(265.0f, 0.0f, 265.0f), glm::vec3(430.0f, 330.0f, 460.0f), white);
 
-	listSize = i;
+	listSize = n;
 	return list;
 }

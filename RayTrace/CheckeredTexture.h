@@ -9,8 +9,6 @@ private:
 	Texture* even;
 	float patternScale;
 public:
-	CheckeredTexture() {}
-	
 	CheckeredTexture(Texture * t0, Texture *t1, float scale)
 		: odd(t0), even(t1), patternScale(scale) {}
 
