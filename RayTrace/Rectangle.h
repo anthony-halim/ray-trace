@@ -27,6 +27,7 @@ public:
 		record.u = (x - x0) / (x1 - x0);
 		record.v = (y - y0) / (y1 - y0);
 		record.t = t;
+		record.p = r.PointAtParameter(t);
 		record.pMat_ptr = pMat;
 		record.normal = glm::vec3(0.0f, 0.0f, 1.0f);
 		
@@ -65,6 +66,7 @@ public:
 		record.u = (x - x0) / (x1 - x0);
 		record.v = (z - z0) / (z1 - z0);
 		record.t = t;
+		record.p = r.PointAtParameter(t);
 		record.pMat_ptr = pMat;
 		record.normal = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -103,8 +105,9 @@ public:
 		record.u = (y - y0) / (y1 - y0);
 		record.v = (z - z0) / (z1 - z0);
 		record.t = t;
+		record.p = r.PointAtParameter(t);
 		record.pMat_ptr = pMat;
-		record.normal = glm::vec3(0.0f, 0.0f, 1.0f);
+		record.normal = glm::vec3(1.0f, 0.0f, 0.0f);
 
 		return true;
 	}
