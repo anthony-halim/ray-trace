@@ -20,7 +20,7 @@ private:
 		float phi = glm::atan(correctedP.z, correctedP.x);
 		float theta = glm::asin(correctedP.y);
 
-		record.u = 1 - (phi - M_PI) / (2 * M_PI);
+		record.u = 1 - (phi + M_PI) / (2 * M_PI);
 		record.v = (theta + M_PI / 2) / M_PI;
 	}
 
