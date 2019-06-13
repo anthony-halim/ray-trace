@@ -20,6 +20,8 @@
 #include "Sphere.h"
 #include "MovingSphere.h"
 #include "Box.h"
+#include "Translate.h"
+#include "RotateY.h"
 
 #define IMAGE_WIDTH 512
 #define IMAGE_HEIGHT 256
@@ -28,8 +30,8 @@
 
 #define T_MIN 1.0e-4f
 #define T_MAX 1.0e4f
-#define ANTI_ALIASING_SAMPLE_NUM 50
-#define MAX_RECURSION_LEVEL 50
+#define ANTI_ALIASING_SAMPLE_NUM 100
+#define MAX_RECURSION_LEVEL 100
 
 #define CAMERA_APERTURE 0.01f
 
@@ -315,9 +317,20 @@ static Polygon** CornellBoxScene(int& listSize) {
 	list[3] = new FlipNormals(new Rectangle_XZ(0, 555, 0, 555, 555, white));
 	list[4] = new Rectangle_XZ(0, 555, 0, 555, 0, white);
 	list[5] = new FlipNormals(new Rectangle_XY(0, 555, 0, 555, 555, white));
+	
+	list[6] =
+		new Translate(
+			new RotateY(
+				new Box(glm::vec3(130.0f, 0.0f, 65.0f), glm::vec3(295.0f, 165.0f, 230.0f), white),
+			-18.0f)
+		, glm::vec3(130.0f, 0.0f, 65.0f));
 
-	list[6] = new Box(glm::vec3(130.0f, 0.0f, 65.0f), glm::vec3(295.0f, 165.0f, 230.0f), white);
-	list[7] = new Box(glm::vec3(265.0f, 0.0f, 265.0f), glm::vec3(430.0f, 330.0f, 460.0f), white);
+	list[7] =
+		new Translate(
+		new RotateY(
+			new Box(glm::vec3(265.0f, 0.0f, 265.0f), glm::vec3(430.0f, 330.0f, 460.0f), white),
+			15.0f)
+		, glm::vec3(265.0f, 0.0f, 295.0f));
 
 	listSize = n;
 	return list;

@@ -131,6 +131,8 @@
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\RotateY.h" />
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\Translate.h" />
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="BVH_Node.h" />

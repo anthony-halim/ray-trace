@@ -116,5 +116,11 @@
     <ClInclude Include="Box.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\RotateY.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Anthony%27s PC\source\repos\RayTrace\RayTrace\Translate.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
