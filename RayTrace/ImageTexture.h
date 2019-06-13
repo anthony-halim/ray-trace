@@ -8,8 +8,6 @@ private:
 	int nx;
 	int ny;
 public:
-	ImageTexture() {}
-
 	ImageTexture(unsigned char * pixels, int numPixX, int numPixY) 
 		: data(pixels), nx(numPixX), ny(numPixY) {}
 
