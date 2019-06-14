@@ -318,19 +318,17 @@ static Polygon** CornellBoxScene(int& listSize) {
 	list[4] = new Rectangle_XZ(0, 555, 0, 555, 0, white);
 	list[5] = new FlipNormals(new Rectangle_XY(0, 555, 0, 555, 555, white));
 	
-	list[6] =
-		new Translate(
-			new RotateY(
-				new Box(glm::vec3(130.0f, 0.0f, 65.0f), glm::vec3(295.0f, 165.0f, 230.0f), white),
-			-18.0f)
-		, glm::vec3(130.0f, 0.0f, 65.0f));
-
-	list[7] =
-		new Translate(
+	list[6] = new Translate(
 		new RotateY(
-			new Box(glm::vec3(265.0f, 0.0f, 265.0f), glm::vec3(430.0f, 330.0f, 460.0f), white),
-			15.0f)
-		, glm::vec3(265.0f, 0.0f, 295.0f));
+			new Box(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 165.0f, 165.0f), white), 
+			-18.0f),
+		glm::vec3(130.0f, 0.0f, 65.0f));
+
+	list[7] = new Translate(
+		new RotateY(
+			new Box(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 330.0f, 165.0f), white), 
+			15.0f),
+		glm::vec3(265.0f, 0.0f, 295.0f));
 
 	listSize = n;
 	return list;

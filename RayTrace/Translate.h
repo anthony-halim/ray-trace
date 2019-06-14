@@ -10,8 +10,8 @@ public:
 	Translate(Polygon* p, const glm::vec3 displacement) 
 		: pObj(p), offset(displacement) {}
 	virtual bool IsHit(const Ray& r, float t_min, float t_max, SHitRecord& record) const override {
-		Ray moved_r(r.GetOrigin() - offset, r.GetDir(), r.GetTime());
-		if (pObj->IsHit(moved_r, t_min, t_max, record)) {
+		Ray movedRay(r.GetOrigin() - offset, r.GetDir(), r.GetTime());
+		if (pObj->IsHit(movedRay, t_min, t_max, record)) {
 			record.p += offset;
 			return true;
 		}
