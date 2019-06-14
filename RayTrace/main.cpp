@@ -24,23 +24,22 @@
 #include "RotateY.h"
 #include "ConstantMedium.h"
 
-#define IMAGE_WIDTH 512
-#define IMAGE_HEIGHT 256
+#define IMAGE_WIDTH 1024
+#define IMAGE_HEIGHT 700
 
 #define FILENAME "output.ppm"
 
 #define T_MIN 1.0e-4f
 #define T_MAX 1.0e4f
-#define ANTI_ALIASING_SAMPLE_NUM 100
+#define ANTI_ALIASING_SAMPLE_NUM 10000
 #define MAX_RECURSION_LEVEL 100
 
 #define CAMERA_APERTURE 0.01f
 
 // Forward Declaration
-static Texture* ReadImageTexture(const char* filename);
+static ImageTexture* CreateImageTexture(const char* filename);
 static void SimulateAndWritePPM();
 static void InitialiseScene();
-static void CleanUpMemory();
 static glm::vec3 RayTrace(const Ray& r, Polygon* world, int recursionLevel = 0);
 
 static Polygon** SimpleScene(int& listSize);
@@ -48,6 +47,7 @@ static Polygon** RandomScene(int& listSize);
 static Polygon** PerlinScene(int& listSize);
 static Polygon** TestScene(int& listSize);
 static Polygon** CornellBoxScene(int& listSize);
+static Polygon** EverythingScene(int& listSize);
 
 // Global variables
 bool g_IsAntiAliasingActivated = false;
@@ -100,7 +100,7 @@ static void InitialiseScene() {
 	std::cout << "Initialising scene..." << std::endl;
 
 	int listSize;
-	Polygon** sceneObjList = CornellBoxScene(listSize);
+	Polygon** sceneObjList = EverythingScene(listSize);
 
 	std::cout << "Number of objects in the scene: " << listSize << std::endl;
 	std::cout << "Initialising BVH Tree..." << std::endl;
@@ -127,13 +127,16 @@ static void SimulateAndWritePPM() {
 	int ny = IMAGE_HEIGHT;
 	int ns = ANTI_ALIASING_SAMPLE_NUM;
 
-	glm::vec3 lookFrom(278.f, 278.f, -800.f);
-	glm::vec3 lookAt(278.f, 278.f, 0.0f);
+	glm::vec3 lookFrom(-278.f, 139.f, -1200.f);
+	glm::vec3 lookAt(-600.f, 278.f, 0.0f);
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
+	//glm::vec3 lookFrom(278.f, 278.f, -800.f);
+	//glm::vec3 lookAt(278.f, 278.f, 0.0f);
+	//glm::vec3 up(0.0f, 1.0f, 0.0f);
 	//glm::vec3 lookFrom(13.f, 2.f, 3.f);
 	//glm::vec3 lookAt(0.f, 0.f, 0.f);
 	//glm::vec3 up(0.0f, 1.0f, 0.0f);
-	float vfov = 40.0f;	
+	float vfov = 30.0f;	
 	float focusDist = 10.0f;
 	float aperture = CAMERA_APERTURE;
 
@@ -290,9 +293,7 @@ static Polygon** TestScene(int& listSize) {
 
 	Texture* perTex = new NoiseTexture(4.0f, 1);
 	
-	int nx, ny, nn;
-	unsigned char* texData = stbi_load("earthmap.jpg", &nx, &ny, &nn, 0);
-	Material* earthMat = new LambertianDiffuse(new ImageTexture(texData, nx, ny));
+	Material* earthMat = new LambertianDiffuse(CreateImageTexture("earthmap.jpg"));
 
 	list[0] = new Sphere(glm::vec3(0.0f, -1000.0f, 0.0f), 1000, new LambertianDiffuse(perTex));
 	list[1] = new Sphere(glm::vec3(0.0f, 2.0f, 0.0f), 2, earthMat);
@@ -338,5 +339,55 @@ static Polygon** CornellBoxScene(int& listSize) {
 	list[7] = boxTwo;
 
 	listSize = n;
+	return list;
+}
+
+static Polygon** EverythingScene(int& listSize) {
+	
+	// Ground
+	int nb = 15;
+	int b = 0;
+	Polygon** boxlist = new Polygon * [300];
+	Material* ground = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.48f, 0.83f, 0.53f)));
+	for (int i = 0; i < nb; i++) {
+		for (int j = 0; j < nb; j++) {
+			float w = 100;
+			float x0 = -1000 + i * w;
+			float z0 = -1000 + j * w;
+			float y0 = 0;
+			float x1 = x0 + w;
+			float y1 = 100 * (((float)rand() / RAND_MAX) + 0.01f);
+			float z1 = z0 + w;
+			boxlist[b++] = new Box(glm::vec3(x0, y0, z0), glm::vec3(x1, y1, z1), ground);
+		}
+	}
+
+	int l = 0;
+	Polygon** list = new Polygon * [30];
+	list[l++] = new BVH_Node(boxlist, b, 0.0f, 1.0f);
+
+	// Light
+	Material* light = new DiffuseLight(new ConstantTexture(glm::vec3(7.0f, 7.0f, 7.0f)));
+	list[l++] = new Rectangle_XZ(-823, -323, 47, 512, 614, light);
+
+	// Obj
+	glm::vec3 centre(-400.0f, 350.0f, 150.0f);
+	list[l++] = new MovingSphere(centre, centre + glm::vec3(100.0f, 0.0f, 0.0f), 70, new LambertianDiffuse(new ConstantTexture(glm::vec3(0.7f, 0.3f, 0.1f))), 1, 0);
+	
+	list[l++] = new Sphere(glm::vec3(-500.0f, 150.0f, 45.0f), 50.0f, new Dielectric(2.5f));
+	
+	list[l++] = new Sphere(glm::vec3(-800.0f, 150.0f, 145.0f), 50.0f, new Metal(new ConstantTexture(glm::vec3(0.8f, 0.8f, 0.9f)), 10.0));
+
+	Material* earthMat = new LambertianDiffuse(CreateImageTexture("earthmap.jpg"));
+	list[l++] = new Sphere(glm::vec3(-350.0f, 170.0f, 100.0f), 100.0f, earthMat);
+
+	Material* perMat = new LambertianDiffuse(new NoiseTexture(0.1));
+	list[l++] = new Sphere(glm::vec3(-660.0f, 280.0f, 300.0f), 80.0f, perMat);
+
+	// Mist
+	Polygon* sceneBoundary = new Box(glm::vec3(-1000, -1000, -1000), glm::vec3(1000, 1000, 1000), new LambertianDiffuse(new ConstantTexture(glm::vec3(0.8f, 0.9f, 0.85f))));
+	list[l++] = new ConstantMedium(sceneBoundary, 0.00002f, new ConstantTexture(glm::vec3(0.8f, 0.9f, 0.85f)));
+
+	listSize = l;
 	return list;
 }
