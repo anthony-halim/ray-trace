@@ -1,2 +1,4 @@
 ﻿  main.cpp
+C:\Users\t_halia\source\repos\RayTrace\RayTrace\ConstantMedium.h(27,1): warning C4305:  'argument': truncation from 'int' to 'float'
+C:\Users\t_halia\source\repos\RayTrace\RayTrace\ConstantMedium.h(28,1): warning C4305:  'argument': truncation from 'int' to 'float'
   RayTrace.vcxproj -> C:\Users\t_halia\source\repos\RayTrace\Debug\RayTrace.exe

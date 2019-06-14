@@ -22,6 +22,7 @@
 #include "Box.h"
 #include "Translate.h"
 #include "RotateY.h"
+#include "ConstantMedium.h"
 
 #define IMAGE_WIDTH 512
 #define IMAGE_HEIGHT 256
@@ -309,26 +310,32 @@ static Polygon** CornellBoxScene(int& listSize) {
 	Material* red = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.65f, 0.05f, 0.05f)));
 	Material* white = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.73f, 0.73f, 0.73f)));
 	Material* green = new LambertianDiffuse(new ConstantTexture(glm::vec3(0.12f, 0.45f, 0.15f)));
-	Material* light = new DiffuseLight(new ConstantTexture(glm::vec3(4.0f, 4.0f, 4.0f)));
+	Material* light = new DiffuseLight(new ConstantTexture(glm::vec3(7.0f, 7.0f, 7.0f)));
 	
 	list[0] = new FlipNormals(new Rectangle_YZ(0, 555, 0, 555, 555, green));
 	list[1] = new Rectangle_YZ(0, 555, 0, 555, 0, red);
 	list[2] = new Rectangle_XZ(213, 343, 227, 332, 554, light);
+	//list[2] = new Rectangle_XZ(113, 443, 127, 432, 554, light);
 	list[3] = new FlipNormals(new Rectangle_XZ(0, 555, 0, 555, 555, white));
 	list[4] = new Rectangle_XZ(0, 555, 0, 555, 0, white);
 	list[5] = new FlipNormals(new Rectangle_XY(0, 555, 0, 555, 555, white));
 	
-	list[6] = new Translate(
+	Polygon* boxOne = new Translate(
 		new RotateY(
-			new Box(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 165.0f, 165.0f), white), 
+			new Box(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 165.0f, 165.0f), white),
 			-18.0f),
 		glm::vec3(130.0f, 0.0f, 65.0f));
-
-	list[7] = new Translate(
+	
+	Polygon* boxTwo = new Translate(
 		new RotateY(
-			new Box(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 330.0f, 165.0f), white), 
+			new Box(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(165.0f, 330.0f, 165.0f), white),
 			15.0f),
 		glm::vec3(265.0f, 0.0f, 295.0f));
+	
+	//list[6] = new ConstantMedium(boxOne, 0.01f, new ConstantTexture(glm::vec3(1.0f, 1.0f, 1.0f)));
+	//list[7] = new ConstantMedium(boxTwo, 0.01f, new ConstantTexture(glm::vec3(0.0f, 0.0f, 0.0f)));
+	list[6] = boxOne;
+	list[7] = boxTwo;
 
 	listSize = n;
 	return list;

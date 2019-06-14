@@ -131,6 +131,8 @@
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConstantMedium.h" />
+    <ClInclude Include="Isotropic.h" />
     <ClInclude Include="RotateY.h" />
     <ClInclude Include="Translate.h" />
     <ClInclude Include="AABB.h" />
