@@ -1,5 +1,10 @@
-﻿  main.cpp
-C:\Users\t_halia\source\repos\RayTrace\RayTrace\ConstantMedium.h(27,1): warning C4305:  'argument': truncation from 'int' to 'float'
-C:\Users\t_halia\source\repos\RayTrace\RayTrace\ConstantMedium.h(28,1): warning C4305:  'argument': truncation from 'int' to 'float'
-C:\Users\t_halia\source\repos\RayTrace\RayTrace\main.cpp(384,64): warning C4305:  'argument': truncation from 'double' to 'float'
-  RayTrace.vcxproj -> C:\Users\t_halia\source\repos\RayTrace\Debug\RayTrace.exe
+﻿  AABB.cpp
+  BVH_Node.cpp
+  main.cpp
+C:\Users\Anthony's PC\source\repos\RayTrace\RayTrace\ConstantMedium.h(27): warning C4305: 'argument': truncation from 'int' to 'float'
+C:\Users\Anthony's PC\source\repos\RayTrace\RayTrace\ConstantMedium.h(28): warning C4305: 'argument': truncation from 'int' to 'float'
+C:\Users\Anthony's PC\source\repos\RayTrace\RayTrace\main.cpp(384): warning C4305: 'argument': truncation from 'double' to 'float'
+  Util.cpp
+C:\Users\Anthony's PC\source\repos\RayTrace\RayTrace\Util.cpp(5): warning C4129: '.': unrecognized character escape sequence
+  Generating Code...
+  RayTrace.vcxproj -> C:\Users\Anthony's PC\source\repos\RayTrace\Debug\RayTrace.exe

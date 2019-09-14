@@ -24,14 +24,14 @@
 #include "RotateY.h"
 #include "ConstantMedium.h"
 
-#define IMAGE_WIDTH 1024
-#define IMAGE_HEIGHT 700
+#define IMAGE_WIDTH 256
+#define IMAGE_HEIGHT 128
 
 #define FILENAME "output.ppm"
 
 #define T_MIN 1.0e-4f
 #define T_MAX 1.0e4f
-#define ANTI_ALIASING_SAMPLE_NUM 10000
+#define ANTI_ALIASING_SAMPLE_NUM 100
 #define MAX_RECURSION_LEVEL 100
 
 #define CAMERA_APERTURE 0.01f
