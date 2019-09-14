@@ -16,12 +16,12 @@ Features:
 
 #### Sample Images
 
-![Compilation](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/Compilation.png)
+![Compilation](/sample_pictures/Compilation.png)
 
-![DOF](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/fardof.png)
+![DOF](/sample_pictures/fardof.png)
 
-![Motion Blur](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/motionblur.png)
+![Motion Blur](/sample_pictures/motionblur.png)
 
-![Perlin](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/perlin.png)
+![Perlin](/sample_pictures/perlin.png)
 
-![Texture Mapping](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/texture.png)
+![Texture Mapping](/sample_pictures/texture.png)
