@@ -16,12 +16,8 @@ Features:
 
 #### Sample Images
 
-![Compilation](/sample_pictures/Compilation.png)
-
-![DOF](/sample_pictures/fardof.png)
-
-![Motion Blur](/sample_pictures/motionblur.png)
-
-![Perlin](/sample_pictures/perlin.png)
-
-![Texture Mapping](/sample_pictures/texture.png)
+<img src="/sample_pictures/Compilation.png" width="512" height="350">
+<img src="/sample_pictures/fardof.png">
+<img src="/sample_pictures/motionblur.png">
+<img src="/sample_pictures/texture.png">
+<img src="/sample_pictures/perlin.png">
