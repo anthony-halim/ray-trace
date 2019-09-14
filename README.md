@@ -14,8 +14,14 @@ Features:
 - Global illumination
 - Volume: Constant density
 
+#### Sample Images
+
 ![Compilation](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/Compilation.png)
+
 ![DOF](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/fardof.png)
+
 ![Motion Blur](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/motionblur.png)
+
 ![Perlin](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/perlin.png)
+
 ![Texture Mapping](https://github.com/anthony-halim/ray-trace/tree/master/sample_pictures/texture.png)
