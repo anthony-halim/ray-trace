@@ -19,5 +19,5 @@ Features:
 <img src="/sample_pictures/Compilation.png" width="512" height="350">
 <img src="/sample_pictures/fardof.png">
 <img src="/sample_pictures/motionblur.png">
-<img src="/sample_pictures/texture.png">
+<img src="/sample_pictures/light.png">
 <img src="/sample_pictures/perlin.png">
